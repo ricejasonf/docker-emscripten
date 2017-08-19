@@ -1,8 +1,10 @@
-FROM ricejasonf/cppdock
-MAINTAINER Jason Rice
+FROM ubuntu:artful
 
 RUN apt-get update && apt-get -y install \
-  python default-jre-headless curl tar xz-utils build-essential
+  python default-jre-headless curl tar xz-utils build-essential \
+    cmake git autoconf bash-completion vim python \
+  && echo '. /usr/share/bash-completion/bash_completion && set -o vi' >> /root/.bashrc \
+  && echo 'set hlsearch' >> /root/.vimrc
 
 WORKDIR /usr/local/src
 
@@ -13,10 +15,11 @@ RUN curl -O https://nodejs.org/dist/v6.9.5/node-v6.9.5-linux-x64.tar.xz \
   && rm -f node-v6.9.5-linux-x64.tar.xz \
   && rm -rf node-v6.9.5-linux-x64
 
-ENV USE_EMSCRIPTEN_TAG=1.37.13
+ENV USE_EMSCRIPTEN_TAG=1.37.19
 
 # clang w/emscripten
 RUN git clone -b $USE_EMSCRIPTEN_TAG https://github.com/kripken/emscripten.git \
+  && rm -rf emscripten/tests \
   && git clone -b $USE_EMSCRIPTEN_TAG https://github.com/kripken/emscripten-fastcomp.git \
   && cd emscripten-fastcomp/tools/ \
   && git clone -b $USE_EMSCRIPTEN_TAG https://github.com/kripken/emscripten-fastcomp-clang.git clang \

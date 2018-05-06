@@ -1,4 +1,5 @@
-FROM ubuntu:artful
+# DEPRECATED
+FROM ubuntu:bionic
 
 RUN apt-get update && apt-get -y install \
   python default-jre-headless curl tar xz-utils build-essential \
@@ -15,7 +16,7 @@ RUN curl -O https://nodejs.org/dist/v6.9.5/node-v6.9.5-linux-x64.tar.xz \
   && rm -f node-v6.9.5-linux-x64.tar.xz \
   && rm -rf node-v6.9.5-linux-x64
 
-ENV USE_EMSCRIPTEN_TAG=1.37.36
+ENV USE_EMSCRIPTEN_TAG=1.37.39
 
 # clang w/emscripten
 RUN git clone -b $USE_EMSCRIPTEN_TAG https://github.com/kripken/emscripten.git \

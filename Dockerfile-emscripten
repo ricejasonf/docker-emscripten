@@ -1,4 +1,4 @@
-ARG EMSCRIPTEN_TAG=1.37.36
+ARG EMSCRIPTEN_TAG=1.37.39
 FROM ricejasonf/emscripten_fastcomp:$EMSCRIPTEN_TAG
   ARG EMSCRIPTEN_TAG
 
@@ -12,21 +12,22 @@ FROM ricejasonf/emscripten_fastcomp:$EMSCRIPTEN_TAG
 
   # node
   RUN curl -O https://nodejs.org/dist/v6.9.5/node-v6.9.5-linux-x64.tar.xz \
-    && tar -xvf node-v6.9.5-linux-x64.tar.xz \
-    && cp -r node-v6.9.5-linux-x64/* /usr/local/ \
-    && rm -f node-v6.9.5-linux-x64.tar.xz \
-    && rm -rf node-v6.9.5-linux-x64
+   && tar -xvf node-v6.9.5-linux-x64.tar.xz \
+   && cp -r node-v6.9.5-linux-x64/* /usr/local/ \
+   && rm -f node-v6.9.5-linux-x64.tar.xz \
+   && rm -rf node-v6.9.5-linux-x64
 
-  # clang w/emscripten
-  RUN git clone -b $EMSCRIPTEN_TAG https://github.com/kripken/emscripten.git \
-    && rm -rf emscripten/tests
+  # Emscripten SDK
+  RUN git clone --depth 1 -b $EMSCRIPTEN_TAG https://github.com/kripken/emscripten.git \
+   && rm -rf emscripten/tests
 
-  RUN cd /usr/local/src/emscripten \
-  && ./emcc -v \
-  && ./embuilder.py build ALL
+  WORKDIR /usr/local/src/emscripten
+  RUN ./emcc -v \
+   && ./embuilder.py build ALL
 
   ENV CC=/usr/local/bin/clang \
       CXX=/usr/local/bin/clang++ \
-      LD_LIBRARY_PATH=/usr/local/lib
+      LD_LIBRARY_PATH=/usr/local/lib \
+      EMCC_SKIP_SANITY_CHECK=1
 
   RUN echo 'export EMCC_SKIP_SANITY_CHECK=1' >> /root/.bashrc

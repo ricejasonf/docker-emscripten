@@ -1,4 +1,4 @@
-ARG EMSCRIPTEN_TAG=1.37.39
+ARG EMSCRIPTEN_TAG=1.38.25
 FROM ubuntu:bionic as fastcomp_build
   ARG EMSCRIPTEN_TAG
 
